@@ -1,0 +1,40 @@
+// General Global styles
+
+.clearfix {
+	zoom: 1;
+
+	&:before, &:after {
+		content: "\0020";
+		display: block;
+		height: 0;
+		overflow: hidden;
+	}
+
+	&:after {
+		clear: both;
+	}
+}
+
+/* BORDER BOX **/
+*, *:before, *:after {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/* REMOVE BLUE/DOTTED BORDER ON FOCUSED ELEMENTS */
+
+a, :focus {
+	outline: 0;
+}
+
+/* ANTI ALIAS */
+* {
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	font-family: Arial;
+}
+
+// End  General Styles

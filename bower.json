@@ -1,0 +1,8 @@
+{
+  "name": "DontTalkToShitheadsClient",
+  "version": "0.0.1",
+  "devDependencies": {
+    "closure-compiler": "~0.2.7",
+    "Materialize": "materialize#~0.97.0"
+  }
+}
