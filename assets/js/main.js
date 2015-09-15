@@ -22,6 +22,13 @@ window.$ = window.jQuery = require('./assets/js_libs/jquery.min.js');
 
 $(document).ready(function() {
 
-    console.log('t');
+    // console.log('t');
+    $('.show_modal_button').click(function() {
+        $('.modal_cover').show();
+    });
+
+    $('.close_modal_button').click(function(){
+        $('.modal_cover').hide();
+    });
 
 });
