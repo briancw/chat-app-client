@@ -1,9 +1,6 @@
 {
   "name": "DontTalkToShitheadsClient",
   "version": "0.0.1",
-  "devDependencies": {
-    "closure-compiler": "~0.2.7"
-  },
   "dependencies": {
     "material-design-lite": "~1.0.4"
   }

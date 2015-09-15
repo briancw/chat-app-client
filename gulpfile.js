@@ -59,7 +59,7 @@ gulp.task('css', ['scss'], function() {
 gulp.task('js', function() {
     return gulp.src(asset_path + '/js/**/*')
         .pipe(closure_compiler({
-            compilerPath: 'bower_components/closure-compiler/lib/vendor/compiler.jar',
+            compilerPath: 'node_modules/google-closure-compiler/compiler.jar',
             fileName: 'all.min.js'
         }))
         .on('error', gutil.log)
