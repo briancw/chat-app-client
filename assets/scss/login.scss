@@ -1,0 +1,20 @@
+.login_container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 110;
+
+    .login_card {
+        background-color: #f7f7f7;
+        margin: 50px auto 0px;
+
+        .signin_button {
+            background-color: #3879d9;
+            width: 100%;
+            margin-top: 20px;
+        }
+    }
+}

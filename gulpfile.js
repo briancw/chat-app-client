@@ -58,10 +58,11 @@ gulp.task('css', ['scss'], function() {
 
 gulp.task('js', function() {
     return gulp.src(asset_path + '/js/**/*')
-        .pipe(closure_compiler({
-            compilerPath: 'node_modules/google-closure-compiler/compiler.jar',
-            fileName: 'all.min.js'
-        }))
+        // .pipe(closure_compiler({
+        //    compilerPath: 'node_modules/google-closure-compiler/compiler.jar',
+        //    fileName: 'all.min.js'
+        // }))
+        .pipe(concat('all.min.js'))
         .on('error', gutil.log)
         .pipe(gulp.dest(asset_path + '/dist'));
 });

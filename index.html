@@ -19,7 +19,7 @@
             <div class="app-header mdl-layout__header mdl-layout__header--waterfall">
                 <div class="mdl-layout__header-row">
                     <span class="app-title mdl-layout-title">
-                        <i class="material-icons md-18">whatshot</i>
+                        <i class="material-icons md-18 sm-24">face</i>
                     </span>
 
                     <!-- Add spacer, to align navigation to the right in desktop -->
@@ -76,21 +76,23 @@
             </div>
 
             <div class="app-content mdl-layout__content">
-                <a name="top"></a>
 
-                <div class="row">
-                    <div class="col-sm-3">
-                        <button class="show_modal_button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                          Button 1
-                        </button>
-                    </div>
+                <div class="home_container">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <button class="show_modal_button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                              Button 1
+                            </button>
+                        </div>
 
-                    <div class="col-sm-3">
-                        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
-                          <i class="material-icons">add</i>
-                        </button>
+                        <div class="col-sm-3">
+                            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
+                              <i class="material-icons">add</i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
             <footer class="mdl-mini-footer">
@@ -103,6 +105,34 @@
                 </div>
             </footer>
 
+        </div>
+
+        <div class="login_container">
+            <div class="login_card mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title">
+                    <h2 class="mdl-card__title-text">Sign In</h2>
+                </div>
+                <div class="mdl-card__supporting-text">
+                    <form id="login_form">
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="text" id="email" />
+                            <label class="mdl-textfield__label" for="email">Username</label>
+                        </div>
+
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="password" id="password" />
+                            <label class="mdl-textfield__label" for="password">Password</label>
+                        </div>
+
+                        <button class="signin_button mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                          Sign In
+                        </button>
+
+                        <a href="#">Register</a>
+
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Yet unseen modal -->
@@ -125,6 +155,12 @@
         </div>
 
         <script src="bower_components/material-design-lite/material.min.js"></script>
+        <script>
+            /*globals window, require */
+            window.jQuery = require('./assets/js_libs/jquery.min.js'); // Load in jQuery this way for reasons
+        </script>
+        <script src="assets/js_libs/underscore.min.js"></script>
+        <script src="assets/js_libs/backbone.min.js"></script>
         <script src="assets/dist/all.min.js"></script>
     </body>
 </html>
