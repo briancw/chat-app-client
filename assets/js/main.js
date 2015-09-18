@@ -9,16 +9,6 @@
 // var level = require('level');
 // var db = level('./dttsdb');
 
-// var job_list = {};
-
-// db.createReadStream({ keys: true, values: true })
-//  .on('data', function (data) {
-//  job_list[data.key] = data.value;
-// })
-// .on('end', function () {
-//  console.log( job_list );
-// });
-
 // jQuery(document).ready(function() {
 //     var init_socket_connect = false;
 //     var server_url = 'ws://localhost:9005';
@@ -41,11 +31,6 @@
 //         ws.send(get_json({type: 'hello'}));
 //     };
 
-//     // console.log('t');
-//     $('#login_form').submit(function(e) {
-
-//     });
-
 //     $('.show_modal_button').click(function() {
 //         $('.modal_cover').show();
 //     });
@@ -56,25 +41,132 @@
 
 // });
 
+
+// Application Setup
+var remote = require('remote');
+var Menu = remote.require('menu');
+var MenuItem = remote.require('menu-item');
+
+var menu = new Menu();
+menu.append(new MenuItem({
+    label: 'MenuItem1',
+    click: function() {
+        console.log('item 1 clicked');
+    }
+}));
+// menu.append(new MenuItem({type: 'separator'}));
+
+window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    menu.popup(remote.getCurrentWindow());
+}, false);
+
 var app_server = 'http://localhost:9001';
 var app = app || {};
+var Snap = {
+    Model : {},
+    // Collection : {},
+    // View : {}
+};
+
+var EventDelegate = {};
+_.extend( EventDelegate, Backbone.Events );
+
+Snap.Model.BaseModel = Backbone.Model.extend({
+    initialize : function( options ) {
+        this.listenTo( EventDelegate, 'application:sync_error', this.sync_error );
+        this.listenTo( EventDelegate, 'application:validation_error', this.validation_error );
+    },
+    sync: function() {
+        return Snap.sync.apply(this, arguments);
+    },
+    sync_error: function(response) {
+        var error_message = response[0].responseText;
+        var error_code = response[0].status;
+        // console.log( response );
+        console.log( error_code, error_message );
+    }
+});
+
+Snap.sync = function(method, model, options) {
+    if (options.hasOwnProperty('error')) {
+        options.error = function() {
+            EventDelegate.trigger('application:sync_error', arguments);
+        };
+    }
+
+    return Backbone.sync(method, model, options);
+};
+
+function display_page(view) {
+    jQuery('.page_container.active').hide().removeClass('active');
+    jQuery('.page_container.' + view).addClass('active').show();
+}
 
 ;(function($, Backbone, _) {
 
-    app.login_form_model = Backbone.Model.extend({
+    app.Router = Backbone.Router.extend({
+        routes: {
+            login:      'login',
+            signup:     'signup',
+            main:     'main'
+        },
+
+        login: function() {
+            display_page('login_container');
+        },
+
+        signup: function() {
+            display_page('signup_container');
+        },
+
+        main: function() {
+            display_page('main_container');
+        }
+
+    });
+
+    // Start The Router
+    app.router = new app.Router();
+    Backbone.history.start(); // {pushState: true} for non hash urls
+
+    // Check if already authenticated
+    $.get(app_server + '/auth-check')
+    .success(function(res) {
+        console.log('authed');
+        app.router.navigate('#main', {trigger: true});
+
+    })
+    .fail(function(res) {
+        if (res && res.status === 401) {
+            console.log('Not Authed');
+            app.router.navigate('#login', {trigger: true});
+        }
+    });
+
+    app.login_form_model = Snap.Model.BaseModel.extend({
         urlRoot: app_server + '/login',
         defaults: {
-            email: 'brian',
-            password: '123456'
+            email: null,
+            password: null
+        },
+        initialize : function() {
+            Snap.Model.BaseModel.prototype.initialize.call( this );
         },
         validate : function() {
             var error = false;
+            var message = 'This field is required and may not be empty.';
 
-            if (0) { // Check for bad things
-                error = {message: 'something bad happened'};
+            if ( _.isEmpty( this.escape( 'email' ))) {
+                error = {field : 'email', message : message};
+            } else if ( _.isEmpty( this.escape( 'password' ))) {
+                error = {field : 'password', message : message};
             }
 
             return error;
+        },
+        sync_error: function(response){
+            console.log(response);
         }
     });
 
@@ -89,31 +181,28 @@ var app = app || {};
         submit: function(e) {
             e.preventDefault();
 
-            if (!this.model.isValid()) {
+            this.model.set('email', this.$el.find('#email').val() );
+            this.model.set('password', this.$el.find('#password').val() );
 
-                console.log( this.model.validationError );
-                // window.alert('Please fix the highlighted fields.');
+            var saved = this.model.save();
 
-            } else {
-                this.model.save()
-                .success(function( response ) {
-                    console.log( response );
-
-                    if (response.success) {
-                        $('.login_container').hide();
-                    }
-
-                    if (response.message) {
-                        alert(response.message);
-                    }
-
-                    // Check auth required route
-                    // $.get(app_server + '/pwd', function(r){
-                    //     console.log( r );
-                    // });
+            if (saved) {
+                saved.success(function(response) {
+                    // console.log( response );
+                    app.router.navigate('#main', {trigger: true});
                 });
+            } else {
+                console.log( this.model.validationError );
+                // EventDelegate.trigger('application:validation_error', this.model.validationError );
             }
+
+            // Check auth required route
+            // $.get(app_server + '/pwd', function(r){
+            //     console.log( r );
+            // });
+
         }
+
     });
 
     var login_form = new app.login_form({

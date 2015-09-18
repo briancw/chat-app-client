@@ -1,0 +1,25 @@
+.login_container, .signup_container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  z-index: 110; }
+  .login_container .login_card, .signup_container .login_card {
+    background-color: #f7f7f7;
+    margin: 50px auto 0px; }
+    .login_container .login_card .login_title, .signup_container .login_card .login_title {
+      text-align: center;
+      font-size: 22px;
+      padding-top: 8px; }
+    .login_container .login_card .signin_button, .signup_container .login_card .signin_button {
+      background-color: #3879d9;
+      width: 100%;
+      margin-top: 20px; }
+    .login_container .login_card .register_link, .login_container .login_card .login_link, .signup_container .login_card .register_link, .signup_container .login_card .login_link {
+      font-size: 14px;
+      display: block;
+      text-align: center;
+      line-height: 36px;
+      margin-top: 5px; }

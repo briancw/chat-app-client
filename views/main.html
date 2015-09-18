@@ -1,0 +1,113 @@
+<div class="page_container main_container">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+        <div class="app-header mdl-layout__header mdl-layout__header--waterfall">
+            <div class="mdl-layout__header-row">
+                <span class="app-title mdl-layout-title">
+                    <i class="material-icons md-18 sm-24">face</i>
+                </span>
+
+                <!-- Add spacer, to align navigation to the right in desktop -->
+                <div class="app-header-spacer mdl-layout-spacer"></div>
+                <!-- <div class="app-search-box mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right mdl-textfield--full-width">
+                    <label class="mdl-button mdl-js-button mdl-button--icon" for="search-field">
+                      <i class="material-icons">search</i>
+                    </label>
+
+                    <div class="mdl-textfield__expandable-holder">
+                      <input class="mdl-textfield__input" type="text" id="search-field" />
+                    </div>
+                </div> -->
+
+                <!-- Navigation -->
+                <div class="app-navigation-container">
+                <nav class="app-navigation mdl-navigation">
+                  <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Tab 1</a>
+                  <a class="mdl-navigation__link mdl-typography--text-uppercase" href="">Tab 2</a>
+                </nav>
+                </div>
+
+                <button class="app-more-button mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" id="more-button">
+                <i class="material-icons">more_vert</i>
+                </button>
+
+                <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
+                <li class="mdl-menu__item">Hey Look</li>
+                <li class="mdl-menu__item">Menu Items</li>
+                <li disabled class="mdl-menu__item">Disabled</li>
+                <li class="mdl-menu__item">Here</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="app-drawer mdl-layout__drawer">
+            <span class="mdl-layout-title">
+                <i class="material-icons md-18">whatshot</i>
+            </span>
+
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">Item 1</a>
+                <a class="mdl-navigation__link" href="">Item 2</a>
+                <a class="mdl-navigation__link" href="">Item 3</a>
+                <a class="mdl-navigation__link" href="">Item 4</a>
+
+                <div class="app-drawer-separator"></div>
+                <span class="mdl-navigation__link" href="">More Stuff</span>
+                <a class="mdl-navigation__link" href="">Item 5</a>
+                <a class="mdl-navigation__link" href="">Item 6</a>
+                <a class="mdl-navigation__link" href="">Item 7</a>
+            </nav>
+        </div>
+
+        <div class="app-content mdl-layout__content">
+
+            <div class="home_container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <button class="show_modal_button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                          Button 1
+                        </button>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
+                          <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="mdl-mini-footer">
+            <div class="mdl-mini-footer__left-section">
+                <div class="mdl-logo">Title</div>
+                <ul class="mdl-mini-footer__link-list">
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Privacy &amp; Terms</a></li>
+                </ul>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Yet unseen modal -->
+    <div class="modal_cover">
+        <div class="modal_card mdl-card mdl-shadow--2dp">
+          <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Modal window</h2>
+          </div>
+          <div class="mdl-card__supporting-text">
+            Wow! What a fancy modal window this is. It looks great.
+          </div>
+
+
+          <div class="mdl-card__actions mdl-card--border">
+            <a class="close_modal_button mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+              Okay
+            </a>
+          </div>
+        </div>
+    </div>
+</div>

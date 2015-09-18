@@ -11,6 +11,8 @@ var gutil = require('gulp-util');
 var notifier = require('node-notifier');
 var del = require('del');
 var closure_compiler = require('gulp-closure-compiler');
+var ejs = require('ejs');
+var fs = require('fs');
 
 var asset_path = 'assets/';
 
@@ -35,7 +37,6 @@ gulp.task('clean', function() {
             .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))
             .on('error', gutil.log)
             .pipe(gulp.dest('assets/css'));
-
     });
 
 });
@@ -67,6 +68,21 @@ gulp.task('js', function() {
         .pipe(gulp.dest(asset_path + '/dist'));
 });
 
+gulp.task('html', function() {
+    // return gulp.src('views/**/*')
+    return gulp.src(
+        [
+            'views/header.html',
+            'views/login.html',
+            'views/signup.html',
+            'views/main.html',
+            'views/footer.html'
+        ])
+        .pipe(concat('index.html'))
+        .on('error', gutil.log)
+        .pipe(gulp.dest(asset_path + '/dist'));
+});
+
 gulp.task('watch', function() {
     watch(asset_path + '/scss/**/*', function() {
         gulp.start('css');
@@ -74,7 +90,10 @@ gulp.task('watch', function() {
     watch(asset_path + '/js/**/*', function() {
         gulp.start('js');
     });
+    watch('views/**/*', function() {
+        gulp.start('html');
+    });
 });
 
 // Default Task
-gulp.task('default', ['clean', 'css', 'js', 'watch']);
+gulp.task('default', ['clean', 'css', 'js', 'html', 'watch']);

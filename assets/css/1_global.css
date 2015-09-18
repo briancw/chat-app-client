@@ -97,3 +97,6 @@ body {
     margin-left: -115px; }
     .modal_cover .modal_card .mdl-button {
       text-decoration: none; }
+
+.page_container {
+  display: none; }

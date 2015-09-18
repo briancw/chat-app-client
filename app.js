@@ -22,9 +22,11 @@ var mainWindow = null;
 app.on('window-all-closed', function() {
 
     // If OSX, don't kill the app on window close
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    // if (process.platform !== 'darwin') {
+    //     app.quit();
+    // }
+
+    app.quit();
 });
 
 app.on('ready', function() {
@@ -35,7 +37,7 @@ app.on('ready', function() {
         // frame: false
     });
 
-    mainWindow.loadUrl('file://' + __dirname + '/index.html');
+    mainWindow.loadUrl('file://' + __dirname + '/assets/dist/index.html');
 
     mainWindow.openDevTools();
 
