@@ -10,27 +10,6 @@
 // var db = level('./dttsdb');
 
 // jQuery(document).ready(function() {
-//     var init_socket_connect = false;
-//     var server_url = 'ws://localhost:9005';
-//     var ws = new WebSocket(server_url);
-
-//     ws.onclose = function() {
-//         if (!init_socket_connect) {
-//             toast( 'Unable to establish WebSocket connection.');
-//         } else {
-//             toast( 'WebSocket Connection closed');
-//         }
-//     };
-
-//     ws.onerror = function(e) {
-//         toast('There was an error with the WebSocket connection.');
-//     };
-
-//     ws.onopen = function() {
-//         init_socket_connect = true;
-//         ws.send(get_json({type: 'hello'}));
-//     };
-
 //     $('.show_modal_button').click(function() {
 //         $('.modal_cover').show();
 //     });
@@ -40,7 +19,6 @@
 //     });
 
 // });
-
 
 // Application Setup
 var remote = require('remote');
@@ -60,6 +38,27 @@ window.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     menu.popup(remote.getCurrentWindow());
 }, false);
+
+var init_socket_connect = false;
+var server_url = 'ws://localhost:9005';
+var ws = new WebSocket(server_url);
+
+ws.onclose = function() {
+    if (!init_socket_connect) {
+        toast( 'Unable to establish WebSocket connection.');
+    } else {
+        toast( 'WebSocket Connection closed');
+    }
+};
+
+ws.onerror = function(e) {
+    toast('There was an error with the WebSocket connection.');
+};
+
+ws.onopen = function() {
+    init_socket_connect = true;
+    ws.send(get_json({type: 'hello'}));
+};
 
 var app_server = 'http://localhost:9001';
 var app = app || {};
@@ -135,7 +134,6 @@ function display_page(view) {
     .success(function(res) {
         console.log('authed');
         app.router.navigate('#main', {trigger: true});
-
     })
     .fail(function(res) {
         if (res && res.status === 401) {
@@ -209,6 +207,21 @@ function display_page(view) {
         model: new app.login_form_model(),
         el : $('#login_form')
     });
+
+    $(document).ready(function() {
+        $('#chat_input').on('keyup', function(e) {
+            e.preventDefault();
+
+            if (e.keyCode === 13) {
+                send_message( $('#chat_input').val() );
+            }
+        });
+    });
+
+    function send_message(message) {
+        ws.send( get_json({type: 'message', message: message}) );
+        console.log( get_json({type: 'message', message: message}) );
+    }
 
 })(jQuery, Backbone, _);
 

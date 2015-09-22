@@ -53,7 +53,7 @@ gulp.task('scss', function() {
 gulp.task('css', ['scss'], function() {
     return gulp.src(asset_path + '/css/**/*')
         .pipe(concat('all.min.css'))
-        .pipe(minify())
+        // .pipe(minify()) // As of 9-22-15 this was not behaving nicely
         .pipe(gulp.dest(asset_path + '/dist'));
 });
 
