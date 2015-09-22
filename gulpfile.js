@@ -11,8 +11,8 @@ var gutil = require('gulp-util');
 var notifier = require('node-notifier');
 var del = require('del');
 var closure_compiler = require('gulp-closure-compiler');
-var ejs = require('ejs');
-var fs = require('fs');
+// var ejs = require('ejs');
+// var fs = require('fs');
 
 var asset_path = 'assets/';
 
