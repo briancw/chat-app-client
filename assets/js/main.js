@@ -60,6 +60,23 @@ ws.onopen = function() {
     ws.send(get_json({type: 'hello'}));
 };
 
+ws.onmessage = function (ret) {
+    var received_msg = JSON.parse(ret.data);
+    var message_type = received_msg.type;
+
+    switch (message_type){
+
+        case 'client_count':
+            console.log('r')
+            jQuery('.client_count').html( received_msg.connected_clients );
+            break;
+
+        default:
+            console.log('Unkown server response');
+            break;
+    }
+}
+
 var app_server = 'http://localhost:9001';
 var app = app || {};
 var Snap = {
@@ -209,13 +226,16 @@ function display_page(view) {
     });
 
     $(document).ready(function() {
-        $('#chat_input').on('keyup', function(e) {
-            e.preventDefault();
+        $('#chat_input').on('keydown', function(e) {
 
             if (e.keyCode === 13) {
+                e.preventDefault();
                 send_message( $('#chat_input').val() );
+                $('#chat_input').val('');
+                return false;
             }
         });
+
     });
 
     function send_message(message) {
