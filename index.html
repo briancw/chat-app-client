@@ -8,8 +8,8 @@
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="../../bower_components/material-design-lite/material.min.css">
-        <link rel="stylesheet" href="all.min.css">
+        <link rel="stylesheet" href="bower_components/material-design-lite/material.min.css">
+        <link rel="stylesheet" href="assets/dist/all.min.css">
 
     </head>
     <body>
@@ -193,13 +193,17 @@
         </div>
     </div>
 </div>
+			</div>
+
+			<div class="toast_container">
+				<div class="toast_text"></div>
+			</div>
+
         <script>
             /*globals window, require */
-            window.jQuery = require('../js_libs/jquery.min.js'); // Load in jQuery this way for reasons
+            window.jQuery = require('./assets/js_libs/jquery.min.js'); // Load in jQuery this way for reasons
         </script>
-        <script src="../js_libs/underscore.min.js"></script>
-        <script src="../js_libs/backbone.min.js"></script>
-        <script src="../dist/all.min.js"></script>
-        <script src="../../bower_components/material-design-lite/material.min.js"></script>
+        <script src="assets/dist/all.min.js"></script>
+        <script src="bower_components/material-design-lite/material.min.js"></script>
     </body>
 </html>

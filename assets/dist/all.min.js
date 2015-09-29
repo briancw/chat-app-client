@@ -1,24 +1,6 @@
 /*jslint node: true */
 /*jslint browser: true */
-/*globals jQuery, Backbone, _ */
-
-// var fs = require('fs');
-// var ipc = require('ipc');
-// var levelup = require('levelup');
-
-// var level = require('level');
-// var db = level('./dttsdb');
-
-// jQuery(document).ready(function() {
-//     $('.show_modal_button').click(function() {
-//         $('.modal_cover').show();
-//     });
-
-//     $('.close_modal_button').click(function() {
-//         $('.modal_cover').hide();
-//     });
-
-// });
+/*globals jQuery */
 
 // Application Setup
 var remote = require('remote');
@@ -60,14 +42,13 @@ ws.onopen = function() {
     ws.send(get_json({type: 'hello'}));
 };
 
-ws.onmessage = function (ret) {
+ws.onmessage = function(ret) {
     var received_msg = JSON.parse(ret.data);
     var message_type = received_msg.type;
 
     switch (message_type){
 
         case 'client_count':
-            console.log('r')
             jQuery('.client_count').html( received_msg.connected_clients );
             break;
 
@@ -75,159 +56,55 @@ ws.onmessage = function (ret) {
             console.log('Unkown server response');
             break;
     }
-}
+};
 
 var app_server = 'http://localhost:9001';
-var app = app || {};
-var Snap = {
-    Model : {},
-    // Collection : {},
-    // View : {}
-};
-
-var EventDelegate = {};
-_.extend( EventDelegate, Backbone.Events );
-
-Snap.Model.BaseModel = Backbone.Model.extend({
-    initialize : function( options ) {
-        this.listenTo( EventDelegate, 'application:sync_error', this.sync_error );
-        this.listenTo( EventDelegate, 'application:validation_error', this.validation_error );
-    },
-    sync: function() {
-        return Snap.sync.apply(this, arguments);
-    },
-    sync_error: function(response) {
-        var error_message = response[0].responseText;
-        var error_code = response[0].status;
-        // console.log( response );
-        console.log( error_code, error_message );
-    }
-});
-
-Snap.sync = function(method, model, options) {
-    if (options.hasOwnProperty('error')) {
-        options.error = function() {
-            EventDelegate.trigger('application:sync_error', arguments);
-        };
-    }
-
-    return Backbone.sync(method, model, options);
-};
 
 function display_page(view) {
     jQuery('.page_container.active').hide().removeClass('active');
     jQuery('.page_container.' + view).addClass('active').show();
 }
 
-;(function($, Backbone, _) {
-
-    app.Router = Backbone.Router.extend({
-        routes: {
-            login:      'login',
-            signup:     'signup',
-            main:     'main'
-        },
-
-        login: function() {
-            display_page('login_container');
-        },
-
-        signup: function() {
-            display_page('signup_container');
-        },
-
-        main: function() {
+;(function($) {
+    $(document).ready(function() {
+        // Check if already authenticated
+        $.get(app_server + '/auth-check')
+        .success(function(res) {
+            console.log('authed');
             display_page('main_container');
-        }
-
-    });
-
-    // Start The Router
-    app.router = new app.Router();
-    Backbone.history.start(); // {pushState: true} for non hash urls
-
-    // Check if already authenticated
-    $.get(app_server + '/auth-check')
-    .success(function(res) {
-        console.log('authed');
-        app.router.navigate('#main', {trigger: true});
-    })
-    .fail(function(res) {
-        if (res && res.status === 401) {
-            console.log('Not Authed');
-            app.router.navigate('#login', {trigger: true});
-        }
-    });
-
-    app.login_form_model = Snap.Model.BaseModel.extend({
-        urlRoot: app_server + '/login',
-        defaults: {
-            email: null,
-            password: null
-        },
-        initialize : function() {
-            Snap.Model.BaseModel.prototype.initialize.call( this );
-        },
-        validate : function() {
-            var error = false;
-            var message = 'This field is required and may not be empty.';
-
-            if ( _.isEmpty( this.escape( 'email' ))) {
-                error = {field : 'email', message : message};
-            } else if ( _.isEmpty( this.escape( 'password' ))) {
-                error = {field : 'password', message : message};
+        })
+        .fail(function(res) {
+            if (res && res.status === 401) {
+                console.log('Not Authed');
+                display_page('login_container');
             }
+        });
 
-            return error;
-        },
-        sync_error: function(response){
-            console.log(response);
-        }
-    });
-
-    app.login_form = Backbone.View.extend({
-        className: 'login_form',
-        events: {
-            submit: 'submit'
-        },
-        initialize: function() {
-
-        },
-        submit: function(e) {
+        $('#login_form').submit(function(e) {
             e.preventDefault();
 
-            this.model.set('email', this.$el.find('#email').val() );
-            this.model.set('password', this.$el.find('#password').val() );
+            $.ajax({
+                type: 'POST',
+                url: app_server + '/login',
+                dataType: 'JSON',
+                data: {
+                    email: $('#email').val(),
+                    password: $('#password').val()
+                },
+                success: function(ret) {
+                    if (ret && ret.success) {
+                        display_page('main_container');
+                    }
+                },
+                error: function(ret) {
+                    if (ret.status === 400) {
+                        toast( ret.responseJSON.message );
+                    }
+                }
+            });
+        });
 
-            var saved = this.model.save();
-
-            if (saved) {
-                saved.success(function(response) {
-                    // console.log( response );
-                    app.router.navigate('#main', {trigger: true});
-                });
-            } else {
-                console.log( this.model.validationError );
-                // EventDelegate.trigger('application:validation_error', this.model.validationError );
-            }
-
-            // Check auth required route
-            // $.get(app_server + '/pwd', function(r){
-            //     console.log( r );
-            // });
-
-        }
-
-    });
-
-    var login_form = new app.login_form({
-        model: new app.login_form_model(),
-        el : $('#login_form')
-    });
-
-    $(document).ready(function() {
         $('#chat_input').on('keydown', function(e) {
-
             if (e.keyCode === 13) {
                 e.preventDefault();
                 send_message( $('#chat_input').val() );
@@ -235,18 +112,22 @@ function display_page(view) {
                 return false;
             }
         });
-
     });
+}(jQuery));
 
-    function send_message(message) {
-        ws.send( get_json({type: 'message', message: message}) );
-        console.log( get_json({type: 'message', message: message}) );
-    }
-
-})(jQuery, Backbone, _);
+function send_message(message) {
+    ws.send( get_json({type: 'message', message: message}) );
+    console.log( get_json({type: 'message', message: message}) );
+}
 
 function toast(message) {
     console.log(message);
+    jQuery('.toast_text').html(message);
+    jQuery('.toast_container').slideDown();
+
+    setTimeout(function() {
+        jQuery('.toast_container').slideUp();
+    }, 3000);
 }
 
 function get_json(input) {

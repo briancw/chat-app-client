@@ -9,15 +9,12 @@ var autoprefixer = require('autoprefixer');
 var watch = require('gulp-watch');
 var gutil = require('gulp-util');
 var notifier = require('node-notifier');
-var del = require('del');
-var closure_compiler = require('gulp-closure-compiler');
-// var ejs = require('ejs');
-// var fs = require('fs');
+var sourcemaps = require('gulp-sourcemaps');
+// var closure_compiler = require('gulp-closure-compiler');
 
 var asset_path = 'assets/';
 
-function swallowError(error) {
-
+function catch_error(error) {
     console.log(error.toString());
     gutil.beep();
     notifier.notify({
@@ -27,34 +24,19 @@ function swallowError(error) {
     this.emit('end');
 }
 
-gulp.task('clean', function() {
-
-    del([ asset_path + '/dist/**/*', asset_path + '/css/**/*'], function(err, paths) {
-
-        return gulp.src('assets/scss/**/*.scss')
-            .pipe(sass())
-            .on('error', swallowError)
-            .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))
-            .on('error', gutil.log)
-            .pipe(gulp.dest('assets/css'));
-    });
-
-});
-
 gulp.task('scss', function() {
-    return gulp.src(asset_path + '/scss/**/*')
+    gulp.src(asset_path + '/scss/**/*')
+    .pipe(sourcemaps.init())
         .pipe(sass())
-        .on('error', swallowError)
-        .pipe(postcss([ autoprefixer({ browsers: ['last 2 version'] }) ]))
-        .on('error', swallowError)
-        .pipe(gulp.dest(asset_path + '/css'));
-});
-
-gulp.task('css', ['scss'], function() {
-    return gulp.src(asset_path + '/css/**/*')
-        .pipe(concat('all.min.css'))
-        // .pipe(minify()) // As of 9-22-15 this was not behaving nicely
-        .pipe(gulp.dest(asset_path + '/dist'));
+    .pipe(sourcemaps.write())
+    .on('error', catch_error)
+    .pipe(postcss([autoprefixer({browsers: ['last 2 version']})]))
+    .on('error', catch_error)
+    .pipe(gulp.dest(asset_path + '/compiled'))
+    .on('error', catch_error)
+    .pipe(concat('all.min.css'))
+    .on('error', catch_error)
+    .pipe(gulp.dest(asset_path + '/dist'));
 });
 
 gulp.task('js', function() {
@@ -64,7 +46,7 @@ gulp.task('js', function() {
         //    fileName: 'all.min.js'
         // }))
         .pipe(concat('all.min.js'))
-        .on('error', gutil.log)
+        .on('error', catch_error)
         .pipe(gulp.dest(asset_path + '/dist'));
 });
 
@@ -79,13 +61,14 @@ gulp.task('html', function() {
             'views/footer.html'
         ])
         .pipe(concat('index.html'))
-        .on('error', gutil.log)
-        .pipe(gulp.dest(asset_path + '/dist'));
+        .on('error', catch_error)
+        // .pipe(gulp.dest(asset_path + '/dist'));
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('watch', function() {
     watch(asset_path + '/scss/**/*', function() {
-        gulp.start('css');
+        gulp.start('scss');
     });
     watch(asset_path + '/js/**/*', function() {
         gulp.start('js');
@@ -96,4 +79,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['clean', 'css', 'js', 'html', 'watch']);
+gulp.task('default', ['scss', 'js', 'html', 'watch']);

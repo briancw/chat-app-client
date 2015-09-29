@@ -1,5 +1,5 @@
 {
-  "name": "DontTalkToShitheadsClient",
+  "name": "DTTS-Client",
   "version": "0.0.1",
   "dependencies": {
     "material-design-lite": "~1.0.4"
